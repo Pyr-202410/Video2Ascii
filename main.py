@@ -1,4 +1,4 @@
-from Video2Ascii import create_char_gray_dict,video_to_ascii_video
+from Video2Ascii import create_char_gray_dict,video_to_ascii_video,image_to_ascii_image
 from string import printable
 import cv2
 from threading import Thread
@@ -23,7 +23,7 @@ class AsyncShow:
             cv2.imshow("Show", frame)
             cv2.waitKey(1)
     
-    def done(self):
+    def stop(self):
         self.done = True
     
 
@@ -48,15 +48,43 @@ if __name__ == "__main__":
     # 创建字符集
     char_dict = create_char_gray_dict(char_list, font_size = 20,font_path = "msyh")
     
-    # ashow = AsyncShow() # （可选）实时显示结果
-    # 2. 直接转换视频
+    ashow = AsyncShow() # （可选）实时显示结果
+    # 转换视频（视频模式）
     video_to_ascii_video(
         input_video_path = "test.mp4",
         output_video_path = "ascii.mp4",
         char_dict = char_dict,
         font_path = "msyh",
-        char_size = 16,  # 字符宽高相同
-        output_width_chars = 256,  # 字符数
+        fps = None, # 手动控制fps，默认与原视频相等
+        char_size = 2,  # 字符宽高相同
+        output_width_chars = 1024,  # 字符数
         codec = 'avc1',  # 兼容性更好的编码
-        showCallback = None  # ashow.show  # （可选）实时显示结果
+        progress = True, # 显示进度条
+        showCallback = ashow.show,  # （可选）实时显示结果
+        text = False  # （可选）是否输出为纯文本生成器
     )
+    ashow.stop()
+    
+    # 转换视频（文本模式）
+    r = video_to_ascii_video(
+        input_video_path = "test.mp4",
+        output_video_path = "ascii.mp4",
+        char_dict = char_dict,
+        font_path = "msyh",
+        fps = None,  # 手动控制fps，默认与原视频相等
+        char_size = 2,  # 字符宽高相同
+        output_width_chars = 1024,  # 字符数
+        codec = 'avc1',  # 兼容性更好的编码
+        progress = True,  # 显示进度条
+        text = True  # （可选）是否输出为纯文本生成器
+    )
+    for frame in r:
+        print(len(frame))
+    '''
+    # 转换图片
+    image_to_ascii_image(
+        "icon.png",
+        "icon_.png",
+        char_dict
+    )'''
+    
