@@ -81,7 +81,7 @@ if __name__ == "__main__":
     for frame in r:
         print(len(frame))
     '''
-    # 转换图片
+    # 转换图片（使用方法基本同视频转换函数）
     image_to_ascii_image(
         "icon.png",
         "icon_.png",
